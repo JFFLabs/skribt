@@ -88,8 +88,7 @@ Every resolution pathway is comprised of one or more steps.  Each step needs to 
 
 To define a step, you will create a new section in the form of `[step.<name>]` where the `<name>` portion is defined by you.
 
-- The `<name>` portion can contain letters A-Z and numbers
-- Letters can be uppercase or lowercase
+- The `<name>` portion can contain letters A-Z and numbers, letters can be uppercase or lowercase
 - The `<name>` must start with a letter.
 - The `<name>` portion must be unique for each step.
 
@@ -98,7 +97,7 @@ Good Practices:
 - Keep step names short and descriptive of what is happening in the step.
 - Keep step names `lowerCamelCase` (first character lowercase, each new word starts uppercase)
 
-Step names are frequently referenced (as we saw in the `[solution]` section's `goto` value).  By using `lowerCamelCase` we differentiate them from configuraiton names (since both can be referenced in the configuration).
+Step names are frequently referenced (as we saw in the `[solution]` section's `goto` value).  By using `lowerCamelCase` we differentiate them from configuraiton names which should be in `lower-snake-case` (since both can be referenced in the configuration).
 
 #### Define Our First Step (selfReset)
 
