@@ -1,0 +1,5 @@
+{
+    "require": {
+        "dotink/jin": "^4.8"
+    }
+}
