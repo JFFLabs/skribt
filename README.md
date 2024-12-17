@@ -1,10 +1,10 @@
 # Skribt
 
-Skribt is a simple system that is designed around configurations which drive steps in support ticket resolutions.  When a support agent first enters the system, they can create a new incident (integrations to come later) and enter information about the support request.  The system will then use AI to try and summarize and match the support request to a most likely problem and lead the agent down a resolution pathway.
+Skribt is a simple system that is designed around configurations.  Configurations define the steps and flow through those steps to resolve a given support ticket.
 
-Each problem or sub-problem the agent has to overcome is defined in its own configuration file.
+When a support agent first enters the system, they can create a new incident (integrations to come later) and enter information about the support request.  The system will then use AI to try to summarize and match the support request to a most likely problem.  The agent selects the likely problem and begins down the resolution pathway.
 
-Configuration files are `INI` format with a number of sections and sub-sections.  Each section contains one or more key names paired with a value.
+Each problem, pathway, or sub-pathway the agent has to overcome is defined in its own configuration file.  Configuration files are `INI` format with a number of sections and sub-sections.  Each section contains one or more key names paired with a value.
 
 ```ini
 [section]
@@ -27,21 +27,26 @@ The values of the `INI` configuration can contain `JSON` for more advanced confi
 	}
 ```
 
-The key names and supported values carry specific meaniing.  As a matter of simplicity, Skribt maintains only a handful of valid key names and value structures to drive the resolution pathway.  Many of these keys are common across sections and subsections and carry the same behavior.  Configuration key names are always 4 character words.
+The key names and supported values carry specific meaniing.  As a matter of simplicity, Skribt maintains only a handful of valid key names and value structures to drive the resolution pathway.  Many of these keys are common across sections and sub-sections within the `INI` configuration file and carry the consistent behavior.  Key names are always 4 character words.
 
 Let's take a look!
 
 ## Creating a Configuration
 
-To create a problem configuration, create a file in the `problems` folder named after the resolution pathway.  Keeping names short and descriptive helps, e.g.:
+To create a configuration, create a file in the `problems` folder named after the actual problem a user is having.  Note, we do not mean _how_ the user is presenting the problem.  Someone might say "I can't log in."  In that case, the "problem" is not that they "cannot login" but it could be 1 of many problems.  They may have forgotten their password, or they may have forgotten their username, or there could be an issue with their internet connection.
+
+Users don't always know what is actually going on.  It's up to the support agent to:
+
+1. Figure out what's going on.
+2. Once they know what's going on, figure out how to solve it.
+
+Note the name of the example configurations below:
 
 ```
 problems
-  |- reset-password.ini
+  |- forgot-password.ini
   |- forgot-username.ini
 ```
-
-This system only has configurations to support two problems.  We'll use the first to build out an example configuration.
 
 Good practices:
 
@@ -51,20 +56,20 @@ Good practices:
 
 Sticking to good practices will make these names easier to remember and reference as it's possible for configurations to import/use other configurations.
 
-### Define the Problem
+### Defining the Problem
 
 The configuration file begins with the `[problem]` section and should minimally define the `text` and `info`:
 
 ```ini
 [problem]
 
-	text = Resetting a User Password
+	text = The user has forgotten their password.
 	info = (
-		You need to assist a user in resetting their password as they cannot log into the system.
+		The user is unable to log into the system.  The most likely cause of this is that they have forgotten their password.  You need to assist the user in resetting their password.
 	)
 ```
 
-### Define the Solution
+### Defining the Solution
 
 Next, you need to define the `[solution]` section.  The solution will be paired with the problem so that the agent gets an idea of the overall process and what the outcome should look like.  The solution does not require separate `text` as it will always be presented in the context of the problem.  It does, however provide it's own `info` and additionally tells Skribt the **first** step to `goto` in order to solve the problem.
 
@@ -204,7 +209,7 @@ Sometimes you want to break apart a resolution pathway into multiple distinct pa
 
 ```
 problems
-  |- reset-password.ini
+  |- forgot-password.ini
   |- forgot-username.ini
 ```
 
@@ -228,7 +233,7 @@ In order to achieve this we'll need to define a couple new input options _and_ a
 		}
 ```
 
-Now, we can define our `forgotUsername` step in the current `reset-password.ini` configuration to use our `forgot-username.ini` configuration.  We do this by defining the `uses` configuration key, which basically means that this step is a proxy for simply jumping into that resolution pathway as a "sub process."
+Now, we can define our `forgotUsername` step in the current `forgot-password.ini` configuration to use our `forgot-username.ini` configuration.  We do this by defining the `uses` configuration key, which basically means that this step is a proxy for simply jumping into that resolution pathway as a "sub process."
 
 ```ini
 [step.forgotUsername]
