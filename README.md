@@ -82,9 +82,16 @@ Next, you need to define the `[solution]` section.  The solution will be paired 
 	)
 ```
 
-### Defining Steps
+### Defining the Resolution Pathway (Steps)
 
-To define a step, you will create a new section in the form of `[step.<name>]` where the `<name>` portion is defined by you.  The `<name>` portion can contain letters A-Z, both upper an lowercase, as well as numbers, but must start with a letter.  The name portion must be unique for each step.
+Every resolution pathway is comprised of one or more steps.  Each step needs to be addressed, receive some sort of response, and then move on to the next step based on that response.
+
+To define a step, you will create a new section in the form of `[step.<name>]` where the `<name>` portion is defined by you.
+
+- The `<name>` portion can contain letters A-Z and numbers
+- Letters can be uppercase or lowercase
+- The `<name>` must start with a letter.
+- The `<name>` portion must be unique for each step.
 
 Good Practices:
 
