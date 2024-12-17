@@ -132,11 +132,11 @@ Similar to steps, you can define names as you wish but should conform to the sam
 Each step should generally have two or more inputs, as a step with only one input would indicate there's only one possible answer.  In our current example, the first input option will be very straightfoward:
 
 ```ini
-	[&.input.success]
+[&.input.success]
 
-		type = option
-		text = The self-reset worked, user can now log in.
-		exit = true
+	type = option
+	text = The self-reset worked, user can now log in.
+	exit = true
 ```
 
 At this level, the `type` is always equal to `option` which indicates this is an option which the agent has to select as a possible outcome of the step.  All options are presented equally and are listed to the agent in the user interface in the order in which they're defined.  Simply move one input above another if you want it to appear earlier.
@@ -148,11 +148,11 @@ The `text` value, again, is the basic summary which displays to the agent for th
 As indicated, however, things are not always this simple, so let's take a look at more examples by defining another input.
 
 ```ini
-	[&.input.noEmail]
+[&.input.noEmail]
 
-		type = option
-		text = The user did not receive the reset email.
-		goto = step.checkSpam
+	type = option
+	text = The user did not receive the reset email.
+	goto = step.checkSpam
 ```
 
 In the above example, we have now given the agent the ability to indicate that the user's self reset failed because they did not receive the reset email.  Critically, this differs from the previous input option because it uses the `goto` configuration key.  Remember that when we defined the `[solution]` we used the `goto` to indicate the first step to go to.  Here, we use it to define the next step to go to _if_ the agent selects this option.
@@ -160,12 +160,12 @@ In the above example, we have now given the agent the ability to indicate that t
 In addition to defining multiple input options, we may also want the agent to log certain details about the interaction so that we can try to better identify issues.  Let's define another input that will be requested when the user selects the `&.input.noEmail` option.
 
 ```ini
-	[&.input.checkedEmail]
+[&.input.checkedEmail]
 
-		when = noEmail
-		type = email
-		text = The email the user checked for the password reset
-		data = userEmail
+	when = noEmail
+	type = email
+	text = The email the user checked for the password reset
+	data = userEmail
 ```
 
 Here, we have added two new configuration keys.
@@ -196,17 +196,17 @@ It is possible to collect the same input information for more than one option in
 If the `type` is set to `select` you will also need to define a `list` configuration.  For example, if we also wanted the agent to enter how long the user waited for the email:
 
 ```ini
-	[&.input.emailWaitTime]
+[&.input.emailWaitTime]
 
-		when = ["success", "noEmail"]
-		type = select
-		text = Time waited for reset email
-		list = [
-			"1 minute or less",
-			"1 to 2 minutes",
-			"2 to 3 minutes",
-			"3 minutes or more"
-		]
+	when = ["success", "noEmail"]
+	type = select
+	text = Time waited for reset email
+	list = [
+		"1 minute or less",
+		"1 to 2 minutes",
+		"2 to 3 minutes",
+		"3 minutes or more"
+	]
 ```
 
 #### Using Sub-Paths
@@ -222,21 +222,21 @@ problems
 In order to achieve this we'll need to define a couple new input options _and_ an new step.
 
 ```ini
-	[&.input.forgotUsername]
+[&.input.forgotUsername]
 
-		type = option
-		text = The user does not know their username
-		goto = step.forgotUsername
+	type = option
+	text = The user does not know their username
+	goto = step.forgotUsername
 
-	[&.input.knowsEmail]
+[&.input.knowsEmail]
 
-		when = forgotUsername
-		type = select
-		text = How certain is the user of their registered email?
-		list = {
-			"super": "Near totally certain",
-			"kinda": "Not very certain"
-		}
+	when = forgotUsername
+	type = select
+	text = How certain is the user of their registered email?
+	list = {
+		"super": "Near totally certain",
+		"kinda": "Not very certain"
+	}
 ```
 
 Now, we can define our `forgotUsername` step in the current `forgot-password.ini` configuration to use our `forgot-username.ini` configuration.  We do this by defining the `uses` configuration key, which basically means that this step is a proxy for simply jumping into that resolution path as a "sub process."
@@ -322,18 +322,18 @@ Good Practices:
 Review the previous step and the structure of the `goto` value.  While the comments in the code explain what each entry means, let's review some basic principles.  Take the following structure:
 
 ```ini
-		goto = {
-			"step.<name>.<sub-name>": [
-				[
-					; conditions
-				]
-			],
-			"step.<name>": [
-				[
-					; conditions
-				]
-			]
-		}
+goto = {
+	"step.<name>.<sub-name>": [
+		[
+			; conditions
+		]
+	],
+	"step.<name>": [
+		[
+			; conditions
+		]
+	]
+}
 ```
 
 The key in the primary `goto` JSON object refers to the step which we are going to, however, we only go to that step if all the conditions are met.  Steps, when defined with the `uses` configuration key, require the name of the step to jump to in the included sub-path, `<sub-name>` in the above. Steps in the same configuration file only require the `<name>`.
@@ -345,16 +345,16 @@ Skribt will iterate over each of the keys in the `goto` object and test each set
 It is possible to say "go to this step if X (set of conditions) is true _or_ Y (set of conditions) is true."  To do this, you would define multiple sets of conditions.  For example:
 
 ```ini
-		goto = {
-			"step.<name>": [
-				[
-					; If all conditions are true go to "step.<name>"
-				],
-				[
-					; ... Or if all these conditions are true, also go to "step.<name>"
-				]
-			]
-		}
+goto = {
+	"step.<name>": [
+		[
+			; If all conditions are true go to "step.<name>"
+		],
+		[
+			; ... Or if all these conditions are true, also go to "step.<name>"
+		]
+	]
+}
 ```
 
 In short, adding additional sets of conditions create means that either set can match.  Within a given set, all conditions must be true, so it is effectively operating as "and."
@@ -364,7 +364,7 @@ In short, adding additional sets of conditions create means that either set can 
 Conditions generally come in only a handful of forms.  To check a form input you can add a conditions such as:
 
 ```ini
-	"step.<name>.input.<input-name>"
+"step.<name>.input.<input-name>"
 ```
 
 If ther is any "truthy" (a non-empty string, a numeric equivalent > 0, etc) value in that input, the condition is met.
@@ -372,31 +372,31 @@ If ther is any "truthy" (a non-empty string, a numeric equivalent > 0, etc) valu
 If you're storing input values into the common data set via the `data` configuration key, you can check them as follows:
 
 ```ini
-	"data.<name>"
+"data.<name>"
 ```
 
 To invert a condition, i.e. to check if it's "not true" you can preceed it with a `!`:
 
 ```ini
-	"!data.<name>"
+"!data.<name>"
 ```
 
 You can check whether or not a step has been "visited" by simply referring to the step:
 
 ```ini
-	"step.<name>
+"step.<name>
 ```
 
 This will return a truthy value if the step has been visited.  Or a falsey value if it has not.  Additionally, if the step makes use of the `uses` configuration to refer to a sub-path, you can check the exit code from that sub-process as follows:
 
 ```ini
-	"step.<name>.?
+"step.<name>.?
 ```
 
 Lastly, for any input, you can use several conditional functions to check for more specific values.  For example, to see that an input value is equal to a specific value, you can use the `is()` function:
 
 ```ini
-	"step.<name>.input.<input-name>.is(<value>)"
+"step.<name>.input.<input-name>.is(<value>)"
 ```
 
 Additional functions include the following:
@@ -408,7 +408,7 @@ Additional functions include the following:
 To check that an input value is less than _or_ equal to another value, you would invert the greater than condition using the prefixed `!`, e.g.:
 
 ```ini
-	"!step.<name>.input.<input-name>.gt(5)
+"!step.<name>.input.<input-name>.gt(5)
 ```
 
 Not greater than five means less than or equal to five.
