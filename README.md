@@ -384,13 +384,13 @@ To invert a condition, i.e. to check if it's "not true" you can preceed it with 
 You can check whether or not a step has been "visited" by simply referring to the step:
 
 ```ini
-"step.<name>
+"step.<name>"
 ```
 
 This will return a truthy value if the step has been visited.  Or a falsey value if it has not.  Additionally, if the step makes use of the `uses` configuration to refer to a sub-path, you can check the exit code from that sub-process as follows:
 
 ```ini
-"step.<name>.?
+"step.<name>.?"
 ```
 
 Lastly, for any input, you can use several conditional functions to check for more specific values.  For example, to see that an input value is equal to a specific value, you can use the `is()` function:
@@ -408,7 +408,7 @@ Additional functions include the following:
 To check that an input value is less than _or_ equal to another value, you would invert the greater than condition using the prefixed `!`, e.g.:
 
 ```ini
-"!step.<name>.input.<input-name>.gt(5)
+"!step.<name>.input.<input-name>.gt(5)"
 ```
 
 Not greater than five means less than or equal to five.
