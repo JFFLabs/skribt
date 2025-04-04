@@ -1,5 +1,41 @@
 {
+    "name": "hiraeth/app",
+    "version": "3.0-beta",
+    "description": "A PHP Nano Framework",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "license": "MIT",
+    "authors": [
+        {
+            "name":  "Matthew J. Sahagian",
+            "email": "matthew.sahagian@gmail.com",
+            "role":  "Lead Architect / Developer"
+        }
+    ],
     "require": {
-        "dotink/jin": "^4.8"
+        "imarc/opus": "^2.0",
+        "hiraeth/core": "^3.0",
+        "hiraeth/twig-tags": "^3.0@beta",
+        "hiraeth/diactoros": "^3.0@beta",
+        "hiraeth/harmony": "^3.0@beta"
+    },
+    "autoload": {
+        "classmap": ["local/"],
+        "psr-0": {
+            "" : "local/"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.2.0"
+        },
+        "allow-plugins": {
+            "imarc/opus": true
+        }
+    },
+    "extra": {
+        "opus": {
+            "enabled": true
+        }
     }
 }
